@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>addCheckPayment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<body>
+    <main class="container">
+    <h2>Add Income</h2>
+    <form id="checkForm">
+        <div class="mb-3">
+            <label for="checkName">Name of the Check</label>
+            <input type="text" class="form-control" id="checkName" name="checkName">
+        </div>
+        <div class="mb-3">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+        <div class="mb-3">
+            <label for="amount">Amount</label>
+            <input type="text" class="form-control" id="amount" name="amount">
+        </div>
+        <div class="mb-3">
+            <label for="bank">Issuing Bank</label>
+            <input type="text" class="form-control" id="bank" name="bank">
+        </div>
+        <div class="mb-3">
+            <label for="code">Account Number</label>
+            <input type="text" class="form-control" id="code" name="code">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button><br>
+        <span class="error" id="infoError"></span>
+        
+    </form>
+</main>
+
+    <script>
+
+        function validateSource() {
+			let isValid = false;
+            const checkName = document.getElementById("checkName").value;
+            const date = document.getElementById("date").value;
+            const amount = document.getElementById("amount").value;
+            const bank = document.getElementById("bank").value;
+            const code = document.getElementById("code").value;
+            document.getElementById("infoError").textContent = "";
+
+            let currDate = new Date();
+            let inputDate = new Date(date);
+            
+            if (checkName.length <= 5) {
+                document.getElementById("infoError").textContent += "Please enter a valid name.";
+            } 
+            else if(currDate >= inputDate){
+                document.getElementById("infoError").textContent += "Please enter a valid date.";
+            }
+            else if(parseInt(amount) <= 0){
+                document.getElementById("infoError").textContent += "Please enter a valid amount.";
+            }
+            else if(bank.length < 5){
+                document.getElementById("infoError").textContent += "Please enter a valid bank.";
+            }
+            else if(code.length != 10){
+                document.getElementById("infoError").textContent += "Please enter a valid account number.";
+            }
+            else {
+                isValid = true;
+                console.log("Information source is valid: "); 
+            }
+
+            
+            if(isValid){
+	            submitForm();
+            }
+        }
+
+        document.getElementById("checkForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            validateSource();
+        });
+
+        function submitForm(){
+            alert("U good");
+            makeRequest();
+        }
+
+        function makeRequest() {
+            const BASE_URL = "https://macpro.csis410.com/submit";
+            let url = BASE_URL; // BASE_URL should be a predefined constant or variable
+
+            // Create a new FormData object
+            let params = new FormData();
+            params.append("Name On The Check", document.getElementById("checkName").value);
+            params.append("Date", document.getElementById("date").value);
+            params.append("Amount", document.getElementById("amount").value);
+            params.append("Bank", document.getElementById("bank").value);
+            params.append("Account Number", document.getElementById("code").value);
+            // Fetch now with a method of POST and the param data in the body
+            fetch(url, { method: "POST", body: params })
+                .then(statusCheck)
+                // .then((response) => response.json()) // Convert the response to JSON
+                .then(response => response.text()) // for text data
+                .then((data) => updateResults(data)) // Handle the data from the response
+                .catch(handleError); // Handle any errors that occur
+            }
+
+            // ********************* Helper Funtions **************************
+            /**
+             * Helper function to return the response's result text if successful, otherwise
+             * returns the rejected Promise result with an error status and corresponding text
+             * @param {object} res - response to check for success/error
+             * @return {object} - valid response if response was successful, otherwise rejected
+             *                    Promise result
+            */
+            async function statusCheck(res) {
+            if (!res.ok) {
+                throw new Error(await res.text());
+             }
+            return res;
+            }
+
+            // These functions need to be defined elsewhere in your code
+            function updateResults(data) {
+                // Update the UI with the results
+                console.log(data);
+            }
+
+            function handleError(error) {
+                // Handle any errors that occur during the fetch
+                console.error(error);
+            }
+
+    </script>
+</body>
+</html>
