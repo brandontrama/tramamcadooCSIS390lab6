@@ -52,7 +52,7 @@
 
     <script>
 
-        function validateExpense() {
+        function validateExpenses() {
 			let isValid = false;
             const expensePlace = document.getElementById("expensePlace").value;
             const expenseDate = document.getElementById("expenseDate").value;
@@ -65,7 +65,7 @@
                 document.getElementById("infoError").textContent = "Please enter valid information";
             } else {
                 isValid = true;
-                console.log("Information source is valid: ", incomeSource);
+                console.log("Information source is valid");
                 
             }
 
