@@ -29,11 +29,11 @@
         </div>
         <div class="mb-3" id="categories">
             <label for="category">Expense Category</label><br>
-            <input class="form-check-input" type="radio" id="Groceries" name="category">
+            <input class="form-check-input" type="radio" id="Groceries" value="Groceries" name="category">
             <label class="form-check-label" for="Groceries">Groceries</label>
-            <input class="form-check-input" type="radio" id="Business" name="category">
+            <input class="form-check-input" type="radio" id="Business" value="Business" name="category">
             <label class="form-check-label" for="Business">Business</label>
-            <input class="form-check-input" type="radio" id="Restaurant" name="category">
+            <input class="form-check-input" type="radio" id="Restaurant" value="Restaurant" name="category">
             <label class="form-check-label" for="Restaurant">Restaurant</label>
         </div>
         <div class="mb-3">
@@ -94,7 +94,7 @@
             params.append("Place of Expense", document.getElementById("expensePlace").value);
             params.append("Expense Date", document.getElementById("expenseDate").value);
             params.append("Expense Amount", document.getElementById("expenseAmount").value);
-            params.append("Expense Category", document.getElementById("categories").value);
+            params.append("Expense Category", getSelectedCategory());
             params.append("Mode of Payment", document.getElementById("payment").value);
             // Fetch now with a method of POST and the param data in the body
             fetch(url, { method: "POST", body: params })
@@ -130,6 +130,16 @@
                 // Handle any errors that occur during the fetch
                 console.error(error);
             }
+
+            function getSelectedCategory() {
+            const categories = document.getElementsByName("category");
+            for (const category of categories) {
+                if (category.checked) {
+                    return category.value;
+                }
+            }
+            return undefined;
+        }
 
     </script>
 </body>
